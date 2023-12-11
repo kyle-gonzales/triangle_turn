@@ -6,6 +6,7 @@ import pygame
 
 from constants import Constants
 
+# disconnection not successful
 
 class Triangle:
     def __init__(self) -> None:

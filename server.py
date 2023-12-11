@@ -5,6 +5,7 @@ import traceback
 
 from constants import Constants
 from game_state import GameState
+from square import Square
 from triangle import Triangle
 
 
@@ -16,6 +17,7 @@ class GameServer:
         self.connected_players_count = 0
         self.game: GameState = GameState()
         # self.game_stage = Constants.WAITING_FOR_PLAYERS
+        # self.last_hit_time = 0
 
         self.server_socket = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
@@ -46,7 +48,7 @@ class GameServer:
                     Constants.FORMAT
                 )
 
-                if message == Constants.DISCONNECT_MESSAGE:
+                if message.startswith(Constants.DISCONNECT_MESSAGE):
                     is_running = False
                     self.clients.remove(client_connection)
                     player_id = message.split()[1]
@@ -54,20 +56,23 @@ class GameServer:
                     self.game.broadcast(str(self.game))
                     # self.connected_players_count -= 1
 
-                if message.startswith(Constants.TRIANGLE_HEADER):
-                    player, square = message.split("&")
-                    print(player)
-                    print(square)
+                if message.startswith("CONNECT"):
+                    self.broadcast(str(self.game.square))
 
-                    id, angle, triangle_center, color, points = player.split("|")[1:]
-                    print("TRIANGLE INFO")
-                    print(id)
-                    print(angle)
-                    print(triangle_center)
-                    print(color)
-                    print(points)
+                if message.startswith("HIT"):
+                    # current_time = ast.literal_eval(message.split()[1])
+                    self.game.square.spawn_square()
+                    self.broadcast(str(self.game.square))
+
+                if message.startswith(Constants.TRIANGLE_HEADER):
+                    # player, square = message.split("&")
+
+                    id, angle, triangle_center, color, points = message.split("|")[1:]
 
                     player = self.game.players.get(id)
+                    if player is None:
+                        player = Triangle()
+                    player.id = id
                     player.angle = angle
                     player.triangle_center = triangle_center
                     player.color = color
@@ -75,16 +80,18 @@ class GameServer:
 
                     self.game.update(id, player)
 
-                    x, y = square.split("|")[1:]
-                    self.game.update_square(x, y)
+                    # x, y = square.split("|")[1:]
+                    # self.game.update_square(x, y)
 
                     self.broadcast(str(self.game))
+                    # print(str(self.game))
 
-                print(f"MESSAGE RECEIVED FROM [{address}]: {message}")
+                # print(f"MESSAGE RECEIVED FROM [{address}]: {message}")
 
             except Exception as e:
-                print(traceback.format_exc())
-                raise e
+                # print(traceback.format_exc())
+                # raise e
+                pass
 
         client_connection.close()
         print(f"SUCCESSFUL DISCONNECTION: {address} has disconnected.")

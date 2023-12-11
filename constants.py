@@ -1,7 +1,6 @@
-
 class Constants:
     # Constants
-    FPS = 90
+    FPS = 60
 
     # Colors
     WHITE = (255, 255, 255)
@@ -12,16 +11,18 @@ class Constants:
 
     COLORS = [RED, YELLOW, BLUE]
 
-
     # triangle constants
 
     TRIANGLE_SIZE = 50
-    ANGULAR_SPEED = 6  # Change this value to adjust rotation speed
+    ANGULAR_SPEED = 2  # Change this value to adjust rotation speed
     TRIANGLE_HEADER = "TRIANGLE"
 
     # square constants
     SIDE_LENGTH = 20
     SQUARE_HEADER = "SQUARE"
+
+    # ---------
+    HIT_COOLDOWN = 0.5
 
     # ------------
     APP_NAME = "Tres"
