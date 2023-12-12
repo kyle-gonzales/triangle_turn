@@ -25,7 +25,7 @@ class Constants:
     HIT_COOLDOWN = 0.5
 
     # ------------
-    APP_NAME = "Tres"
+    APP_NAME = "Turning Triangles!"
 
     GAME_START = 0
     GAME_IN_PROGRESS = 1

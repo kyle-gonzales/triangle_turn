@@ -185,6 +185,10 @@ class Client:
     def connect_window(self):
         clock = pygame.time.Clock()
         running = True
+
+        large_font = pygame.font.Font(None, 60)
+        small_font = pygame.font.Font(None, 36)
+
         while running:
             message = ""
 
@@ -209,7 +213,23 @@ class Client:
                 self.square.y = ast.literal_eval(y)
                 self.main()
 
-            SCREEN.fill(Constants.WHITE)  # change background here
+            SCREEN.fill(Constants.BLACK)  # change background here
+
+            title_text = large_font.render(Constants.APP_NAME, True, Constants.WHITE)
+            click_to_start_text = small_font.render(
+                "Click to Start...", True, Constants.WHITE
+            )  # Change color if needed
+            title_rect = title_text.get_rect(center=SCREEN.get_rect().center)
+
+            SCREEN.blit(title_text, title_rect)
+
+            click_to_start_rect = click_to_start_text.get_rect()
+            click_to_start_rect.midbottom = (Constants.WIDTH / 2, Constants.HEIGHT - 50)
+            SCREEN.blit(click_to_start_text, click_to_start_rect)
+            SCREEN.blit(
+                click_to_start_text,
+                click_to_start_rect,
+            )
 
             # Update the display
             pygame.display.flip()
