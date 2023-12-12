@@ -164,7 +164,7 @@ class Client:
                 # print(e)
                 pass
 
-            SCREEN.fill(Constants.BLACK)
+            SCREEN.fill(Constants.BLACK)  # change background here
 
             self.square.draw(SCREEN)
             for t in self.other_triangles:
@@ -209,7 +209,7 @@ class Client:
                 self.square.y = ast.literal_eval(y)
                 self.main()
 
-            SCREEN.fill(Constants.WHITE)
+            SCREEN.fill(Constants.WHITE)  # change background here
 
             # Update the display
             pygame.display.flip()
