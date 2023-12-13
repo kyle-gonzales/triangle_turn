@@ -10,6 +10,7 @@ from constants import Constants
 from scoreboard import ScoreBoard
 from square import Square
 from triangle import Triangle
+from serverinput import InputServer
 
 # Initialize Pygame
 pygame.init()
@@ -20,12 +21,15 @@ pygame.display.set_caption(Constants.APP_NAME)
 
 
 class Client:
-    server = "192.168.1.25"  # paste the IP of the server here
+
 
     def __init__(self) -> None:
+        self.server = ""  # paste the IP of the server here
+        self.ip = "172.16.3.189"
+
         self.running = False
         self.server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.SERVER_ADDRESS = (self.server, Constants.PORT)
+        self.SERVER_ADDRESS = [self.server, Constants.PORT]
         self.triangle = Triangle()
 
         self.other_triangles = []
@@ -33,7 +37,8 @@ class Client:
         self.hit_flag = False
 
     def connect(self):
-        self.server_connection.connect(self.SERVER_ADDRESS)
+        self.SERVER_ADDRESS = [self.server, Constants.PORT]
+        self.server_connection.connect(tuple(self.SERVER_ADDRESS))
         self.server_connection.settimeout(0.05)
         self.send(f"CONNECT {self.triangle.id}")
 
@@ -118,6 +123,7 @@ class Client:
 
     def main(self):
         self.running = True
+        # server_input = InputServer()
 
         # Start a separate thread for receiving messages
         receive_thread = threading.Thread(target=self.handle_messages)
@@ -141,6 +147,7 @@ class Client:
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE:
                         self.triangle.is_moving = False
+                    
 
             if self.triangle.is_moving:
                 self.triangle.move()
@@ -206,9 +213,23 @@ class Client:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        self.connect()
+                # if event.type == pygame.MOUSEBUTTONDOWN:
+                #     if event.button == 1:
+                #         self.connect()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        # self.server = server_input.enter_server()
+                        try:
+                            self.server = self.server.strip()
+                            print(self.server)
+                            self.connect()
+                        except Exception as e:
+                            print(e)
+                            print("failed to connect")
+                    elif event.key == pygame.K_BACKSPACE:
+                        self.server = self.server[:-1]
+                    else:
+                        self.server += event.unicode
 
             if message.startswith(Constants.SQUARE_HEADER):
                 # receiving square coordinates from the server indicates a successful connection. we may go to the main screen.
@@ -221,19 +242,30 @@ class Client:
             SCREEN.fill(Constants.BLACK)  # change background here
 
             title_text = large_font.render(Constants.APP_NAME, True, Constants.WHITE)
-            click_to_start_text = small_font.render(
-                "Click to Start...", True, Constants.WHITE
-            )  # Change color if needed
             title_rect = title_text.get_rect(center=SCREEN.get_rect().center)
 
             SCREEN.blit(title_text, title_rect)
 
+            click_to_start_text = small_font.render(
+                "Press ENTER to Start...", True, Constants.WHITE
+            )  # Change color if needed
             click_to_start_rect = click_to_start_text.get_rect()
             click_to_start_rect.midbottom = (Constants.WIDTH / 2, Constants.HEIGHT - 50)
             SCREEN.blit(click_to_start_text, click_to_start_rect)
             SCREEN.blit(
                 click_to_start_text,
                 click_to_start_rect,
+            )
+
+            server_text = small_font.render(
+                "Enter Server IP: " + self.server, True, Constants.WHITE
+            )  # Change color if needed
+            server_rect = server_text.get_rect()
+            server_rect.midbottom = (Constants.WIDTH / 2, Constants.HEIGHT - 100)
+            SCREEN.blit(server_text, server_rect)
+            SCREEN.blit(
+                server_text,
+                server_rect,
             )
 
             # Update the display
