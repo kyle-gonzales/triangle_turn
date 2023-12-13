@@ -6,7 +6,6 @@ import pygame
 
 from constants import Constants
 
-# disconnection not successful
 
 class Triangle:
     def __init__(self) -> None:
@@ -37,6 +36,16 @@ class Triangle:
         vertex3 = self.get_vertex(3)
 
         pygame.draw.polygon(screen, self.color, (vertex1, vertex2, vertex3))
+
+        # Calculate the center of the triangle
+        center_x = (vertex1[0] + vertex2[0] + vertex3[0]) // 3
+        center_y = (vertex1[1] + vertex2[1] + vertex3[1]) // 3
+
+        # Render text (self.id) at the center of the triangle
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render(str(self.id), True, Constants.BLACK)
+        text_rect = text_surface.get_rect(center=(center_x, center_y))
+        screen.blit(text_surface, text_rect)
 
     def move(self):
         direction_x = (

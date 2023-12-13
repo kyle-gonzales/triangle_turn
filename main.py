@@ -7,6 +7,7 @@ import time
 import pygame
 
 from constants import Constants
+from scoreboard import ScoreBoard
 from square import Square
 from triangle import Triangle
 
@@ -18,7 +19,6 @@ SCREEN = pygame.display.set_mode((Constants.WIDTH, Constants.HEIGHT))
 pygame.display.set_caption(Constants.APP_NAME)
 
 
-# TODO CLEANLY DISCONNECT FROM GAME
 class Client:
     server = "192.168.1.25"  # paste the IP of the server here
 
@@ -86,6 +86,7 @@ class Client:
                         self.triangle.points = ast.literal_eval(points)
                     else:
                         player = Triangle()
+                        player.id = ast.literal_eval(id)
                         player.angle = ast.literal_eval(angle)
                         player.triangle_center = ast.literal_eval(triangle_center)
                         player.color = ast.literal_eval(color)
@@ -171,6 +172,10 @@ class Client:
                 t.draw(SCREEN)
             self.other_triangles.clear()
             self.triangle.draw(SCREEN)
+
+            scoreboard = ScoreBoard(self.other_triangles)
+            scoreboard.players.append(self.triangle)
+            scoreboard.draw(SCREEN)
 
             # Update the display
             pygame.display.flip()
