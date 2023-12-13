@@ -22,5 +22,5 @@ class ScoreBoard:
             )
             text_rect = text.get_rect(x=10, y=30 * i + 10)  # Adjust position as needed
             scoreboard_surface.blit(text, text_rect)
-
         screen.blit(scoreboard_surface, (10, 10))
+
