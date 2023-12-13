@@ -20,7 +20,7 @@ pygame.display.set_caption(Constants.APP_NAME)
 
 
 class Client:
-    server = "192.168.1.25"  # paste the IP of the server here
+    server = "172.16.7.220"  # paste the IP of the server here
 
     def __init__(self) -> None:
         self.running = False
@@ -173,9 +173,9 @@ class Client:
             self.other_triangles.clear()
             self.triangle.draw(SCREEN)
 
-            scoreboard = ScoreBoard(self.other_triangles)
-            scoreboard.players.append(self.triangle)
-            scoreboard.draw(SCREEN)
+            # scoreboard = ScoreBoard(self.other_triangles)
+            # scoreboard.players.append(self.triangle)
+            # scoreboard.draw(SCREEN)
 
             # Update the display
             pygame.display.flip()

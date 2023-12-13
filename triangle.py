@@ -43,7 +43,7 @@ class Triangle:
 
         # Render text (self.id) at the center of the triangle
         font = pygame.font.Font(None, 24)
-        text_surface = font.render(str(self.id), True, Constants.BLACK)
+        text_surface = font.render(f"{self.id} : {self.points}", True, Constants.BLACK)
         text_rect = text_surface.get_rect(center=(center_x, center_y))
         screen.blit(text_surface, text_rect)
 
